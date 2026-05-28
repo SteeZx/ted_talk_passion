@@ -280,13 +280,16 @@ document.addEventListener('keydown',function(e){
   if(e.key==='ArrowLeft'){e.preventDefault();go(-1);}
 });
 
-// Écoute les ordres de la fenêtre présentateur (clavier ou bouton)
+// Écoute les ordres de la fenêtre présentateur (clavier ou bouton de simulation)
 window.addEventListener('message', function(e) {
   if(e.data.type === 'CHANGE_SLIDE') {
     goTo(e.data.index, true);
   }
   if(e.data.type === 'TRIGGER_SIM') {
     runSim();
+  }
+  if(e.data.type === 'TRIGGER_RESET') {
+    resetSimLayout();
   }
 });
 
@@ -334,7 +337,6 @@ function openPresenterMode() {
         transform: scale(0.8);
         animation: previewFadeUp 0.8s cubic-bezier(.25,1,.5,1) both;
       }
-      /* Animation dédiée pour forcer la transition dans l'aperçu */
       @keyframes previewFadeUp {from{opacity:0;transform:scale(0.76) translateY(15px)}to{opacity:1;transform:scale(0.8) translateY(0)}}
       
       .notes-title { font-size: 14px; color: #ff5aad; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 15px; font-weight: bold; border-bottom: 1px solid #27272a; padding-bottom: 8px;}
@@ -366,7 +368,7 @@ function openPresenterMode() {
           <button class="ctrl-btn prev" onclick="window.opener.go(-1)">← PREVIOUS SLIDE</button>
           <button class="ctrl-btn" onclick="window.opener.go(1)">NEXT SLIDE →</button>
         </div>
-        <button class="sim-btn" id="simLauncher" style="display:none;" onclick="window.opener.postMessage({type:'TRIGGER_SIM'}, '*')">▶ Run Failure Simulation (Slide 8)</button>
+        <button class="sim-btn" id="simLauncher" style="display:none;" onclick="triggerPresenterSim()">▶ Run Failure Simulation</button>
       </div>
       <div class="right-col">
         <div class="notes-title">🗣️ Speaker Notes (English Script)</div>
@@ -375,18 +377,25 @@ function openPresenterMode() {
     </div>
 
     <script>
-      // Capture les entrées claviers DEPUIS la fenêtre présentateur et les transmet à l'orateur principal
       document.addEventListener('keydown', function(e) {
         if(e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); window.opener.go(1); }
         if(e.key === 'ArrowLeft') { e.preventDefault(); window.opener.go(-1); }
       });
+
+      function triggerPresenterSim() {
+        var btn = document.getElementById('simLauncher');
+        if(btn.textContent.includes('Simulation')) {
+          window.opener.postMessage({type:'TRIGGER_SIM'}, '*');
+        } else {
+          window.opener.postMessage({type:'TRIGGER_RESET'}, '*');
+        }
+      }
 
       window.addEventListener('message', function(e) {
         if(e.data.type === 'SYNC_PRESENTER') {
           document.getElementById('slideNum').textContent = (e.data.index + 1) + ' / ' + e.data.total;
           document.getElementById('notesBox').textContent = e.data.notes;
           
-          // Force le déclenchement de la transition CSS d'aperçu à chaque rechargement
           var pBox = document.getElementById('previewBox');
           pBox.style.animation = 'none';
           pBox.offsetHeight; 
@@ -405,6 +414,29 @@ function openPresenterMode() {
         }
         if(e.data.type === 'TICK') {
           document.getElementById('clock').textContent = e.data.time;
+        }
+        // Écoute de la copie synchrone de l'animation de comptage
+        if(e.data.type === 'UPDATE_SIM_UI') {
+          var cloneCnt = document.getElementById('previewBox').querySelector('#cnt');
+          var cloneBtn = document.getElementById('previewBox').querySelector('#runbtn');
+          if(cloneCnt) {
+            cloneCnt.textContent = e.data.text;
+            cloneCnt.className = e.data.className;
+          }
+          if(cloneBtn) {
+            cloneBtn.disabled = e.data.btnDisabled;
+            cloneBtn.textContent = e.data.btnText;
+          }
+          
+          // Aligne l'état du bouton natif du pupitre présentateur
+          var launchBtn = document.getElementById('simLauncher');
+          if(e.data.isFinished) {
+            launchBtn.textContent = '↺ Reset Simulation';
+          } else if(e.data.isRunning) {
+            launchBtn.textContent = 'running...';
+          } else {
+            launchBtn.textContent = '▶ Run Failure Simulation';
+          }
         }
       });
     <\/script>
@@ -489,21 +521,60 @@ document.addEventListener('touchend',function(e){
 });
 setTimeout(function(){var h=document.getElementById('hint');h.style.opacity='0';},4000);
 
+// ANIMATION ENGINE DOUBLE FENÊTRE SYNCHRONISÉE
+function syncSimToPresenter(text, className, btnDisabled, btnText, isRunning, isFinished) {
+  if(presenterWindow && !presenterWindow.closed) {
+    presenterWindow.postMessage({
+      type: 'UPDATE_SIM_UI',
+      text: text,
+      className: className,
+      btnDisabled: btnDisabled,
+      btnText: btnText,
+      isRunning: isRunning,
+      isFinished: isFinished
+    }, '*');
+  }
+}
+
 function runSim(){
   if(sim)return;sim=true;
   var cnt=document.getElementById('cnt'),btn=document.getElementById('runbtn');
   btn.disabled=true;btn.textContent='running...';
+  
+  syncSimToPresenter('FAIL #01', 'count-num fail', true, 'running...', true, false);
+  
   var n=1,iv=setInterval(function(){
-    if(n<50){cnt.textContent='FAIL #'+String(n).padStart(2,'0');cnt.className='count-num fail';n++;}
+    if(n<50){
+      var failTxt = 'FAIL #' + String(n).padStart(2,'0');
+      cnt.textContent = failTxt;
+      cnt.className = 'count-num fail';
+      syncSimToPresenter(failTxt, 'count-num fail', true, 'running...', true, false);
+      n++;
+    }
     else{
-      clearInterval(iv);cnt.textContent='SUCCESS';cnt.className='count-num win';sim=false;
-      btn.textContent='↺ reset';btn.disabled=false;
+      clearInterval(iv);
+      cnt.textContent='SUCCESS';
+      cnt.className='count-num win';
+      sim=false;
+      btn.textContent='↺ reset';
+      btn.disabled=false;
+      
+      syncSimToPresenter('SUCCESS', 'count-num win', false, '↺ reset', false, true);
+      
       btn.onclick=function(){
-        cnt.textContent='FAIL #01';cnt.className='count-num fail';
-        btn.textContent='▶ run the simulation';btn.onclick=runSim;
+        resetSimLayout();
       };
     }
   },55);
+}
+
+function resetSimLayout() {
+  var cnt=document.getElementById('cnt'),btn=document.getElementById('runbtn');
+  cnt.textContent='FAIL #01';
+  cnt.className='count-num fail';
+  btn.textContent='▶ run the simulation';
+  btn.onclick=runSim;
+  syncSimToPresenter('FAIL #01', 'count-num fail', false, '▶ run the simulation', false, false);
 }
 </script>
 </body>
