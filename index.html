@@ -44,6 +44,36 @@ html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
 .pr{position:absolute;border-radius:50%;animation:pr 2.5s ease-out infinite;}
 @keyframes pr{0%{opacity:.7;transform:scale(.5)}100%{opacity:0;transform:scale(1)}}
 
+/* Styles pour la grille d'icônes de la Slide 2 */
+.passions-grid {
+  display: flex;
+  gap: clamp(40px, 6vw, 100px);
+  margin: 30px 0;
+  justify-content: center;
+  align-items: center;
+}
+.passion-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.passion-icon {
+  width: clamp(60px, 8vw, 90px);
+  height: clamp(60px, 8vw, 90px);
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+.passion-item:hover .passion-icon {
+  transform: translateY(-8px);
+}
+.passion-label {
+  font-family: monospace;
+  font-size: 16px;
+  letter-spacing: .2em;
+  margin-top: 20px;
+  font-weight: bold;
+}
+
 /* ── STYLE POUR LES SLIDES DE QUESTIONS INDIVIDUELLES ── */
 .single-qa-box {
   background: rgba(255, 255, 255, 0.02);
@@ -90,6 +120,7 @@ html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
 <div class="deck">
   <div class="stage">
 
+    <!-- SLIDE 1 -->
     <div class="slide on" id="s0">
       <div class="pulse-wrap" style="width:120px;height:120px;margin-bottom:12px;">
         <div class="pr" style="width:44px;height:44px;border:1px solid rgba(255,255,255,.25);animation-delay:0s"></div>
@@ -101,16 +132,52 @@ html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
       <div class="sub">Your hands are shaking. Your heart is pounding.<br>The entire world around you vanishes.</div>
     </div>
 
+    <!-- SLIDE 2 : LOGOS PASSIONS MAJ -->
     <div class="slide" id="s1">
       <div class="big">What <span class="accent-b">drives</span> us?</div>
-      <div style="display:flex;gap:64px;margin:20px 0;">
-        <div style="text-align:center;"><div style="font-size:clamp(40px,6vw,64px);">&#9697;</div><div style="font-family:monospace;font-size:14px;letter-spacing:.2em;color:#4a9eff;margin-top:12px;font-weight:bold;">RIDING</div></div>
-        <div style="text-align:center;"><div style="font-size:clamp(40px,6vw,64px);">&#9633;</div><div style="font-family:monospace;font-size:14px;letter-spacing:.2em;color:#ff5aad;margin-top:12px;font-weight:bold;">GAMING</div></div>
-        <div style="text-align:center;"><div style="font-size:clamp(40px,6vw,64px);">&#9651;</div><div style="font-family:monospace;font-size:14px;letter-spacing:.2em;color:#ff6b35;margin-top:12px;font-weight:bold;">SPORT</div></div>
+      
+      <div class="passions-grid">
+        <!-- RIDING : CASQUE MOTO -->
+        <div class="passion-item">
+          <svg class="passion-icon" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12c0 3.22 1.523 6.086 3.9 7.95" />
+            <path d="M19.5 10.5C18 7.5 15 6 12 6s-6 1.5-7.5 4.5" />
+            <path d="M4.5 10.5h15" />
+            <path d="M6 14.5c2 1 4 1.5 6 1.5s4-.5 6-1.5" />
+            <circle cx="12" cy="12" r="1" fill="#4a9eff" />
+          </svg>
+          <div class="passion-label" style="color:#4a9eff;">RIDING</div>
+        </div>
+
+        <!-- GAMING : MANETTE CONSOLE -->
+        <div class="passion-item">
+          <svg class="passion-icon" viewBox="0 0 24 24" fill="none" stroke="#ff5aad" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="6" y1="12" x2="10" y2="12" />
+            <line x1="8" y1="10" x2="8" y2="14" />
+            <line x1="15" y1="13" x2="15.01" y2="13" stroke-width="2" />
+            <line x1="18" y1="11" x2="18.01" y2="11" stroke-width="2" />
+            <path d="M17.32 5H6.68A4.68 4.68 0 0 0 2 9.68v4.64A4.68 4.68 0 0 0 6.68 19h.64a4.68 4.68 0 0 0 3.73-1.84L12 16l.95 1.16A4.68 4.68 0 0 0 16.68 19h.64A4.68 4.68 0 0 0 22 14.32V9.68A4.68 4.68 0 0 0 17.32 5z" />
+          </svg>
+          <div class="passion-label" style="color:#ff5aad;">GAMING</div>
+        </div>
+
+        <!-- SPORT : CHRONOMETRE -->
+        <div class="passion-item">
+          <svg class="passion-icon" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="13" r="8" />
+            <polyline points="12 9 12 13 14 15" />
+            <line x1="12" y1="5" x2="12" y2="2" />
+            <line x1="10" y1="2" x2="14" y2="2" />
+            <line x1="19" y1="6" x2="21" y2="4" />
+          </svg>
+          <div class="passion-label" style="color:#ff6b35;">SPORT</div>
+        </div>
       </div>
+
       <div class="sub">Why do we willingly spend our energy, time, and money on things that don't pay our bills? The answer is simple: <em>Passion.</em></div>
     </div>
 
+    <!-- SLIDE 3 -->
     <div class="slide" id="s2">
       <div class="big" style="font-size:clamp(70px,12vw,130px);letter-spacing:.05em;">PASSION</div>
       <div style="display:flex;gap:24px;flex-wrap:wrap;justify-content:center;margin:10px 0;">
@@ -121,11 +188,13 @@ html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
       <div class="sub" style="font-style:italic; max-width:800px;">"Passion is not a hobby. It is a psychological necessity."</div>
     </div>
 
+    <!-- SLIDE 4 -->
     <div class="slide" id="s3">
       <div class="big"><span class="accent-b">The Flow</span><br>State</div>
       <div class="sub">Mihaly Csikszentmihalyi — the optimal state where your brain shuts down the Default Mode Network: no more overthinking, no more anxiety.</div>
     </div>
 
+    <!-- SLIDE 5 -->
     <div class="slide" id="s4">
       <div style="display:flex;align-items:center;gap:40px;margin-bottom:16px;">
         <div style="text-align:center;">
@@ -142,6 +211,7 @@ html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
       <div class="sub">Riding, gaming, sport — your brain sees no difference.</div>
     </div>
 
+    <!-- SLIDE 6 -->
     <div class="slide" id="s5">
       <div class="split">
         <div class="half left">
@@ -158,18 +228,21 @@ html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
       <div class="sub" style="margin-top:12px;"><span style="color:rgba(255,255,255,.25);font-family:monospace;font-size:15px;">lat.</span> <em>passio</em> = suffering — passion is a double-edged sword.</div>
     </div>
 
+    <!-- SLIDE 7 -->
     <div class="slide" id="s6">
       <div class="big">Pilot the <span class="accent-o">fire.</span></div>
       <div class="sub">True maturity is learning how to fuel the flame<br>without burning the house down.</div>
       <div style="font-family:monospace;font-size:14px;color:rgba(255,255,255,.2);letter-spacing:.15em;margin-top:12px;">HARMONIOUS ────────────────────── OBSESSIVE</div>
     </div>
 
+    <!-- SLIDE 8 -->
     <div class="slide" id="s7">
       <div class="count-num fail" id="cnt">FAIL #01</div>
       <button class="run-btn" id="runbtn" onclick="runSim()">&#9654; run the simulation</button>
       <div class="sub" style="font-style:italic;margin-top:12px;">"Passion turns failure from a punishment into a motivation."</div>
     </div>
 
+    <!-- SLIDE 9 -->
     <div class="slide" id="s8">
       <div class="big">Shared <span class="accent-p">Adrenaline</span></div>
       <svg viewBox="0 0 500 140" style="width:min(600px,85vw);margin:12px 0;">
@@ -192,6 +265,7 @@ html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
       <div class="sub">A nod between two riders on a highway. Instant teamwork with strangers online. A bond with teammates. Passion breaks isolation.</div>
     </div>
 
+    <!-- SLIDE 10 -->
     <div class="slide" id="s9">
       <div class="pulse-wrap" style="width:150px;height:150px;margin-bottom:16px;">
         <div class="pr" style="width:54px;height:54px;border:1px solid rgba(74,158,255,.55);animation-delay:0s"></div>
@@ -203,12 +277,14 @@ html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
       <div class="sub">Never apologize for what you are passionate about.<br>Never let your spark go out. Thank you.</div>
     </div>
 
+    <!-- SLIDE 11 : Q&A INTRO -->
     <div class="slide" id="s10">
       <div class="big" style="font-size:clamp(90px,18vw,180px);color:#ff5aad;line-height:0.7;font-family:monospace;text-shadow: 0 0 40px rgba(255,90,173,0.35);">?</div>
       <div class="big" style="font-size:clamp(45px,6.5vw,72px);margin-top:15px;">Questions & Answers</div>
       <div class="sub" style="letter-spacing: 0.05em; font-size:clamp(22px,2.6vw,36px);">Let's start the conversation. What are your thoughts?</div>
     </div>
 
+    <!-- SLIDE 12 : QUESTION 1 INDIVIDUELLE -->
     <div class="slide" id="s11">
       <div class="bg-q-mark" style="color:#4a9eff;">?</div>
       <div class="single-qa-box" style="border-color: rgba(74,158,255,0.3);">
@@ -217,6 +293,7 @@ html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
       </div>
     </div>
 
+    <!-- SLIDE 13 : QUESTION 2 INDIVIDUELLE -->
     <div class="slide" id="s12">
       <div class="bg-q-mark" style="color:#ff5aad;">?</div>
       <div class="single-qa-box" style="border-color: rgba(255,90,173,0.3);">
@@ -225,6 +302,7 @@ html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
       </div>
     </div>
 
+    <!-- SLIDE 14 : QUESTION 3 INDIVIDUELLE -->
     <div class="slide" id="s13">
       <div class="bg-q-mark" style="color:#ff6b35;">?</div>
       <div class="single-qa-box" style="border-color: rgba(255,107,53,0.3);">
@@ -235,6 +313,7 @@ html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
 
   </div>
 
+  <!-- BAR -->
   <div class="bar">
     <span class="bar-num" id="barnum">1 / 14</span>
     <div class="dots" id="dotnav"></div>
