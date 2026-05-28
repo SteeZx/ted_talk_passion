@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Fuel of Life</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
+
+.deck{position:fixed;inset:0;display:flex;flex-direction:column;font-family:'Georgia',serif;}
+.stage{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 60px;}
+
+.slide{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:30px;width:100%;animation:fadeUp 1s cubic-bezier(.25,1,.5,1) both;}
+.slide.on{display:flex;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+.big{font-size:clamp(50px,8.5vw,100px);font-weight:400;line-height:1.1;color:#fff;}
+.sub{font-size:clamp(20px,2.4vw,32px);font-weight:400;line-height:1.6;color:rgba(255,255,255,.65);max-width:900px;}
+.accent-b{color:#4a9eff;}
+.accent-p{color:#ff5aad;}
+.accent-o{color:#ff6b35;}
+
+.pill{display:inline-flex;align-items:center;gap:12px;padding:12px 28px;border:1px solid rgba(255,255,255,.2);border-radius:100px;font-family:monospace;font-size:18px;color:rgba(255,255,255,.7);}
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block;}
+
+.split{display:flex;gap:40px;width:100%;max-width:900px;}
+.half{flex:1;padding:36px 32px;border-radius:12px;text-align:center;}
+.half.left{background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.25);}
+.half.right{background:rgba(255,90,173,.06);border:1px solid rgba(255,90,173,.25);}
+.half .hlabel{font-family:monospace;font-size:14px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:14px;}
+.half .val{font-size:clamp(24px,3vw,36px);color:#fff;font-style:italic;}
+.half .hdesc{font-size:16px;color:rgba(255,255,255,.4);margin-top:14px;}
+
+.count-num{font-size:clamp(80px,15vw,160px);color:rgba(255,255,255,.15);font-family:monospace;line-height:1;transition:color .2s;}
+.count-num.fail{color:#ff6b35;}
+.count-num.win{color:#4aff91;}
+.run-btn{margin-top:12px;padding:14px 36px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);border-radius:8px;font-family:monospace;font-size:16px;letter-spacing:.1em;cursor:pointer;transition:all .2s;}
+.run-btn:hover{background:rgba(255,255,255,.12);color:#fff;}
+
+.pulse-wrap{position:relative;display:flex;align-items:center;justify-content:center;}
+.pulse-core{border-radius:50%;background:#4a9eff;animation:pc 1.5s ease-in-out infinite;}
+@keyframes pc{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+.pr{position:absolute;border-radius:50%;animation:pr 2.5s ease-out infinite;}
+@keyframes pr{0%{opacity:.7;transform:scale(.5)}100%{opacity:0;transform:scale(1)}}
+
+/* ── STYLE POUR LES SLIDES DE QUESTIONS INDIVIDUELLES ── */
+.single-qa-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 40px 50px;
+  border-radius: 16px;
+  max-width: 950px;
+  width: 100%;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+}
+.qa-big-text {
+  font-size: clamp(26px, 3.5vw, 44px);
+  color: #fff;
+  line-height: 1.4;
+  font-style: italic;
+  margin-top: 15px;
+}
+.bg-q-mark {
+  font-size: clamp(100px, 20vw, 220px);
+  font-family: monospace;
+  line-height: 0.5;
+  font-weight: bold;
+  opacity: 0.15;
+  user-select: none;
+  margin-bottom: -20px;
+}
+
+/* ── BARRE DE NAVIGATION ── */
+.bar{display:flex;align-items:center;justify-content:space-between;padding:24px 50px;border-top:1px solid rgba(255,255,255,.06);}
+.bar-num{font-family:monospace;font-size:16px;color:rgba(255,255,255,.35);}
+.dots{display:flex;gap:8px;}
+.dot-nav{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.18);cursor:pointer;transition:background .2s;}
+.dot-nav.on{background:#4a9eff;}
+.nav-btns{display:flex;gap:14px;}
+.nbtn{background:rgba(255,255,255,.06);border:none;color:rgba(255,255,255,.45);width:44px;height:44px;border-radius:8px;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.nbtn:hover{background:rgba(255,255,255,.12);color:#fff;}
+
+/* ── HINT ── */
+#hint{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);font-family:monospace;font-size:13px;color:rgba(255,255,255,.2);letter-spacing:.15em;pointer-events:none;transition:opacity 1s;}
+</style>
+</head>
+<body>
+
+<div class="deck">
+  <div class="stage">
+
+    <div class="slide on" id="s0">
+      <div class="pulse-wrap" style="width:120px;height:120px;margin-bottom:12px;">
+        <div class="pr" style="width:44px;height:44px;border:1px solid rgba(255,255,255,.25);animation-delay:0s"></div>
+        <div class="pr" style="width:80px;height:80px;border:1px solid rgba(255,255,255,.15);animation-delay:.5s"></div>
+        <div class="pr" style="width:120px;height:120px;border:1px solid rgba(255,255,255,.08);animation-delay:1s"></div>
+        <div class="pulse-core" style="width:18px;height:18px;background:#fff;"></div>
+      </div>
+      <div class="big" style="font-size:clamp(65px,12vw,140px);letter-spacing:-.02em;">130 <span style="font-size:.45em;opacity:.35;">BPM</span></div>
+      <div class="sub">Your hands are shaking. Your heart is pounding.<br>The entire world around you vanishes.</div>
+    </div>
+
+    <div class="slide" id="s1">
+      <div class="big">What <span class="accent-b">drives</span> us?</div>
+      <div style="display:flex;gap:64px;margin:20px 0;">
+        <div style="text-align:center;"><div style="font-size:clamp(40px,6vw,64px);">&#9697;</div><div style="font-family:monospace;font-size:14px;letter-spacing:.2em;color:#4a9eff;margin-top:12px;font-weight:bold;">RIDING</div></div>
+        <div style="text-align:center;"><div style="font-size:clamp(40px,6vw,64px);">&#9633;</div><div style="font-family:monospace;font-size:14px;letter-spacing:.2em;color:#ff5aad;margin-top:12px;font-weight:bold;">GAMING</div></div>
+        <div style="text-align:center;"><div style="font-size:clamp(40px,6vw,64px);">&#9651;</div><div style="font-family:monospace;font-size:14px;letter-spacing:.2em;color:#ff6b35;margin-top:12px;font-weight:bold;">SPORT</div></div>
+      </div>
+      <div class="sub">Why do we willingly spend our energy, time, and money on things that don't pay our bills? The answer is simple: <em>Passion.</em></div>
+    </div>
+
+    <div class="slide" id="s2">
+      <div class="big" style="font-size:clamp(70px,12vw,130px);letter-spacing:.05em;">PASSION</div>
+      <div style="display:flex;gap:24px;flex-wrap:wrap;justify-content:center;margin:10px 0;">
+        <span class="pill"><span class="dot" style="background:#4a9eff"></span>Brain</span>
+        <span class="pill"><span class="dot" style="background:#ff5aad"></span>Balance</span>
+        <span class="pill"><span class="dot" style="background:#ff6b35"></span>Resilience</span>
+      </div>
+      <div class="sub" style="font-style:italic; max-width:800px;">"Passion is not a hobby. It is a psychological necessity."</div>
+    </div>
+
+    <div class="slide" id="s3">
+      <div class="big"><span class="accent-b">The Flow</span><br>State</div>
+      <div class="sub">Mihaly Csikszentmihalyi — the optimal state where your brain shuts down the Default Mode Network: no more overthinking, no more anxiety.</div>
+    </div>
+
+    <div class="slide" id="s4">
+      <div style="display:flex;align-items:center;gap:40px;margin-bottom:16px;">
+        <div style="text-align:center;">
+          <div style="width:clamp(70px,10vw,100px);height:clamp(70px,10vw,100px);border-radius:50%;border:2px solid #ff5aad;display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:18px;color:#ff5aad;font-weight:bold;animation:spin 8s linear infinite;">DA</div>
+          <div style="font-family:monospace;font-size:14px;color:rgba(255,255,255,.5);margin-top:10px;">Dopamine</div>
+        </div>
+        <div style="color:rgba(255,255,255,.18);font-size:44px;">+</div>
+        <div style="text-align:center;">
+          <div style="width:clamp(70px,10vw,100px);height:clamp(70px,10vw,100px);border-radius:50%;border:2px solid #ff6b35;display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:18px;color:#ff6b35;font-weight:bold;animation:spin 12s linear infinite reverse;">β‑E</div>
+          <div style="font-family:monospace;font-size:14px;color:rgba(255,255,255,.5);margin-top:10px;">Endorphins</div>
+        </div>
+      </div>
+      <div class="big" style="font-size:clamp(36px,5vw,58px);">A biological reset button<br>for your mental health</div>
+      <div class="sub">Riding, gaming, sport — your brain sees no difference.</div>
+    </div>
+
+    <div class="slide" id="s5">
+      <div class="split">
+        <div class="half left">
+          <div class="hlabel" style="color:#4a9eff;">Harmonious</div>
+          <div class="val">Feeds life</div>
+          <div class="hdesc">Energy · balance · joy</div>
+        </div>
+        <div class="half right">
+          <div class="hlabel" style="color:#ff5aad;">Obsessive</div>
+          <div class="val">Consumes you</div>
+          <div class="hdesc">Addiction · risk · loss of control</div>
+        </div>
+      </div>
+      <div class="sub" style="margin-top:12px;"><span style="color:rgba(255,255,255,.25);font-family:monospace;font-size:15px;">lat.</span> <em>passio</em> = suffering — passion is a double-edged sword.</div>
+    </div>
+
+    <div class="slide" id="s6">
+      <div class="big">Pilot the <span class="accent-o">fire.</span></div>
+      <div class="sub">True maturity is learning how to fuel the flame<br>without burning the house down.</div>
+      <div style="font-family:monospace;font-size:14px;color:rgba(255,255,255,.2);letter-spacing:.15em;margin-top:12px;">HARMONIOUS ────────────────────── OBSESSIVE</div>
+    </div>
+
+    <div class="slide" id="s7">
+      <div class="count-num fail" id="cnt">FAIL #01</div>
+      <button class="run-btn" id="runbtn" onclick="runSim()">&#9654; run the simulation</button>
+      <div class="sub" style="font-style:italic;margin-top:12px;">"Passion turns failure from a punishment into a motivation."</div>
+    </div>
+
+    <div class="slide" id="s8">
+      <div class="big">Shared <span class="accent-p">Adrenaline</span></div>
+      <svg viewBox="0 0 500 140" style="width:min(600px,85vw);margin:12px 0;">
+        <line x1="60" y1="70" x2="170" y2="40" stroke="rgba(74,158,255,.3)" stroke-width="1.5"/>
+        <line x1="60" y1="70" x2="155" y2="105" stroke="rgba(74,158,255,.3)" stroke-width="1.5"/>
+        <line x1="170" y1="40" x2="280" y2="70" stroke="rgba(255,90,173,.3)" stroke-width="1.5"/>
+        <line x1="155" y1="105" x2="280" y2="70" stroke="rgba(255,107,53,.3)" stroke-width="1.5"/>
+        <line x1="280" y1="70" x2="375" y2="35" stroke="rgba(74,158,255,.3)" stroke-width="1.5"/>
+        <line x1="280" y1="70" x2="390" y2="110" stroke="rgba(255,90,173,.3)" stroke-width="1.5"/>
+        <line x1="375" y1="35" x2="450" y2="70" stroke="rgba(255,107,53,.3)" stroke-width="1.5"/>
+        <line x1="390" y1="110" x2="450" y2="70" stroke="rgba(74,158,255,.3)" stroke-width="1.5"/>
+        <circle cx="60" cy="70" r="8" fill="#4a9eff" opacity=".85"/>
+        <circle cx="170" cy="40" r="7" fill="#ff5aad" opacity=".85"/>
+        <circle cx="155" cy="105" r="7" fill="#ff6b35" opacity=".85"/>
+        <circle cx="280" cy="70" r="11" fill="rgba(255,255,255,.85)"/>
+        <circle cx="375" cy="35" r="7" fill="#4a9eff" opacity=".85"/>
+        <circle cx="390" cy="110" r="8" fill="#ff5aad" opacity=".85"/>
+        <circle cx="450" cy="70" r="9" fill="#ff6b35" opacity=".85"/>
+      </svg>
+      <div class="sub">A nod between two riders on a highway. Instant teamwork with strangers online. A bond with teammates. Passion breaks isolation.</div>
+    </div>
+
+    <div class="slide" id="s9">
+      <div class="pulse-wrap" style="width:150px;height:150px;margin-bottom:16px;">
+        <div class="pr" style="width:54px;height:54px;border:1px solid rgba(74,158,255,.55);animation-delay:0s"></div>
+        <div class="pr" style="width:96px;height:96px;border:1px solid rgba(74,158,255,.3);animation-delay:.5s"></div>
+        <div class="pr" style="width:150px;height:150px;border:1px solid rgba(74,158,255,.15);animation-delay:1s"></div>
+        <div class="pulse-core" style="width:26px;height:26px;box-shadow:0 0 40px #4a9eff,0 0 80px rgba(74,158,255,.3);"></div>
+      </div>
+      <div class="big" style="font-size:clamp(36px,6vw,68px);">Find your fuel.<br>Protect your flow.</div>
+      <div class="sub">Never apologize for what you are passionate about.<br>Never let your spark go out. Thank you.</div>
+    </div>
+
+    <div class="slide" id="s10">
+      <div class="big" style="font-size:clamp(90px,18vw,180px);color:#ff5aad;line-height:0.7;font-family:monospace;text-shadow: 0 0 40px rgba(255,90,173,0.35);">?</div>
+      <div class="big" style="font-size:clamp(45px,6.5vw,72px);margin-top:15px;">Questions & Answers</div>
+      <div class="sub" style="letter-spacing: 0.05em; font-size:clamp(22px,2.6vw,36px);">Let's start the conversation. What are your thoughts?</div>
+    </div>
+
+    <div class="slide" id="s11">
+      <div class="bg-q-mark" style="color:#4a9eff;">?</div>
+      <div class="single-qa-box" style="border-color: rgba(74,158,255,0.3);">
+        <div class="pill" style="color:#4a9eff; border-color:rgba(74,158,255,0.2);"><span class="dot" style="background:#4a9eff"></span>Topic 1 · Balance</div>
+        <div class="qa-big-text">"Can someone be truly happy and fulfilled in life without having any specific passion?"</div>
+      </div>
+    </div>
+
+    <div class="slide" id="s12">
+      <div class="bg-q-mark" style="color:#ff5aad;">?</div>
+      <div class="single-qa-box" style="border-color: rgba(255,90,173,0.3);">
+        <div class="pill" style="color:#ff5aad; border-color:rgba(255,90,173,0.2);"><span class="dot" style="background:#ff5aad"></span>Topic 2 · Limits</div>
+        <div class="qa-big-text">"Where exactly do we draw the line between a healthy harmonious passion and a dangerous obsession?"</div>
+      </div>
+    </div>
+
+    <div class="slide" id="s13">
+      <div class="bg-q-mark" style="color:#ff6b35;">?</div>
+      <div class="single-qa-box" style="border-color: rgba(255,107,53,0.3);">
+        <div class="pill" style="color:#ff6b35; border-color:rgba(255,107,53,0.2);"><span class="dot" style="background:#ff6b35"></span>Topic 3 · Society</div>
+        <div class="qa-big-text">"Does our modern school system or society encourage us to find our true passions, or does it suppress them?"</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bar">
+    <span class="bar-num" id="barnum">1 / 14</span>
+    <div class="dots" id="dotnav"></div>
+    <div class="nav-btns">
+      <button class="nbtn" onclick="go(-1)" aria-label="Previous">&#8592;</button>
+      <button class="nbtn" onclick="go(1)" aria-label="Next">&#8594;</button>
+    </div>
+  </div>
+</div>
+
+<div id="hint">← → ARROW KEYS TO NAVIGATE</div>
+
+<style>
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+</style>
+
+<script>
+var cur=0,total=14,sim=false;
+var dotnav=document.getElementById('dotnav');
+for(var i=0;i<total;i++){
+  var d=document.createElement('div');
+  d.className='dot-nav'+(i===0?' on':'');
+  (function(x){d.onclick=function(){goTo(x)}})(i);
+  dotnav.appendChild(d);
+}
+function goTo(n){
+  document.getElementById('s'+cur).classList.remove('on');
+  cur=Math.max(0,Math.min(n,total-1));
+  var s=document.getElementById('s'+cur);
+  s.classList.remove('on');void s.offsetWidth;s.classList.add('on');
+  document.getElementById('barnum').textContent=(cur+1)+' / '+total;
+  dotnav.querySelectorAll('.dot-nav').forEach(function(d,i){d.classList.toggle('on',i===cur)});
+}
+function go(d){goTo(cur+d);}
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(1);}
+  if(e.key==='ArrowLeft'){e.preventDefault();go(-1);}
+});
+// touch swipe
+var tx=0;
+document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;});
+document.addEventListener('touchend',function(e){
+  var diff=tx-e.changedTouches[0].clientX;
+  if(Math.abs(diff)>50){diff>0?go(1):go(-1);}
+});
+// hide hint
+setTimeout(function(){var h=document.getElementById('hint');h.style.opacity='0';},4000);
+function runSim(){
+  if(sim)return;sim=true;
+  var cnt=document.getElementById('cnt'),btn=document.getElementById('runbtn');
+  btn.disabled=true;btn.textContent='running...';
+  var n=1,iv=setInterval(function(){
+    if(n<50){cnt.textContent='FAIL #'+String(n).padStart(2,'0');cnt.className='count-num fail';n++;}
+    else{
+      clearInterval(iv);cnt.textContent='SUCCESS';cnt.className='count-num win';sim=false;
+      btn.textContent='↺ reset';btn.disabled=false;
+      btn.onclick=function(){
+        cnt.textContent='FAIL #01';cnt.className='count-num fail';
+        btn.textContent='▶ run the simulation';btn.onclick=runSim;
+      };
+    }
+  },55);
+}
+</script>
+</body>
+</html>
