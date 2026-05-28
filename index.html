@@ -44,64 +44,20 @@ html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
 .pr{position:absolute;border-radius:50%;animation:pr 2.5s ease-out infinite;}
 @keyframes pr{0%{opacity:.7;transform:scale(.5)}100%{opacity:0;transform:scale(1)}}
 
-/* Styles pour la grille d'icônes de la Slide 2 */
-.passions-grid {
-  display: flex;
-  gap: clamp(40px, 6vw, 100px);
-  margin: 30px 0;
-  justify-content: center;
-  align-items: center;
-}
-.passion-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-.passion-icon {
-  width: clamp(60px, 8vw, 90px);
-  height: clamp(60px, 8vw, 90px);
-  transition: transform 0.3s ease, filter 0.3s ease;
-}
-.passion-item:hover .passion-icon {
-  transform: translateY(-8px);
-}
-.passion-label {
-  font-family: monospace;
-  font-size: 16px;
-  letter-spacing: .2em;
-  margin-top: 20px;
-  font-weight: bold;
-}
+/* Bouton Presenter Mode */
+.pres-btn{margin-top:10px;padding:10px 20px;background:rgba(255,90,173,0.15);border:1px solid rgba(255,90,173,0.4);color:#ff5aad;border-radius:30px;font-family:monospace;font-size:14px;letter-spacing:.05em;cursor:pointer;transition:all .2s;}
+.pres-btn:hover{background:rgba(255,90,173,0.25);box-shadow:0 0 15px rgba(255,90,173,0.2);color:#fff;}
 
-/* ── STYLE POUR LES SLIDES DE QUESTIONS INDIVIDUELLES ── */
-.single-qa-box {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 40px 50px;
-  border-radius: 16px;
-  max-width: 950px;
-  width: 100%;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-}
-.qa-big-text {
-  font-size: clamp(26px, 3.5vw, 44px);
-  color: #fff;
-  line-height: 1.4;
-  font-style: italic;
-  margin-top: 15px;
-}
-.bg-q-mark {
-  font-size: clamp(100px, 20vw, 220px);
-  font-family: monospace;
-  line-height: 0.5;
-  font-weight: bold;
-  opacity: 0.15;
-  user-select: none;
-  margin-bottom: -20px;
-}
+.passions-grid {display: flex;gap: clamp(40px, 6vw, 100px);margin: 30px 0;justify-content: center;align-items: center;}
+.passion-item {display: flex;flex-direction: column;align-items: center;text-align: center;}
+.passion-icon {width: clamp(60px, 8vw, 90px);height: clamp(60px, 8vw, 90px);transition: transform 0.3s ease;}
+.passion-item:hover .passion-icon {transform: translateY(-8px);}
+.passion-label {font-family: monospace;font-size: 16px;letter-spacing: .2em;margin-top: 20px;font-weight: bold;}
 
-/* ── BARRE DE NAVIGATION ── */
+.single-qa-box {background: rgba(255, 255, 255, 0.02);border: 1px solid rgba(255, 255, 255, 0.08);padding: 40px 50px;border-radius: 16px;max-width: 950px;width: 100%;box-shadow: 0 20px 50px rgba(0,0,0,0.3);}
+.qa-big-text {font-size: clamp(26px, 3.5vw, 44px);color: #fff;line-height: 1.4;font-style: italic;margin-top: 15px;}
+.bg-q-mark {font-size: clamp(100px, 20vw, 220px);font-family: monospace;line-height: 0.5;font-weight: bold;opacity: 0.15;user-select: none;margin-bottom: -20px;}
+
 .bar{display:flex;align-items:center;justify-content:space-between;padding:24px 50px;border-top:1px solid rgba(255,255,255,.06);}
 .bar-num{font-family:monospace;font-size:16px;color:rgba(255,255,255,.35);}
 .dots{display:flex;gap:8px;}
@@ -111,7 +67,6 @@ html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
 .nbtn{background:rgba(255,255,255,.06);border:none;color:rgba(255,255,255,.45);width:44px;height:44px;border-radius:8px;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
 .nbtn:hover{background:rgba(255,255,255,.12);color:#fff;}
 
-/* ── HINT ── */
 #hint{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);font-family:monospace;font-size:13px;color:rgba(255,255,255,.2);letter-spacing:.15em;pointer-events:none;transition:opacity 1s;}
 </style>
 </head>
@@ -130,50 +85,26 @@ html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
       </div>
       <div class="big" style="font-size:clamp(65px,12vw,140px);letter-spacing:-.02em;">130 <span style="font-size:.45em;opacity:.35;">BPM</span></div>
       <div class="sub">Your hands are shaking. Your heart is pounding.<br>The entire world around you vanishes.</div>
+      <button class="pres-btn" id="presInitBtn" onclick="openPresenterMode()">🖥️ Open Presenter Mode</button>
     </div>
 
-    <!-- SLIDE 2 : LOGOS PASSIONS MAJ -->
+    <!-- SLIDE 2 -->
     <div class="slide" id="s1">
       <div class="big">What <span class="accent-b">drives</span> us?</div>
-      
       <div class="passions-grid">
-        <!-- RIDING : CASQUE MOTO -->
         <div class="passion-item">
-          <svg class="passion-icon" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12c0 3.22 1.523 6.086 3.9 7.95" />
-            <path d="M19.5 10.5C18 7.5 15 6 12 6s-6 1.5-7.5 4.5" />
-            <path d="M4.5 10.5h15" />
-            <path d="M6 14.5c2 1 4 1.5 6 1.5s4-.5 6-1.5" />
-            <circle cx="12" cy="12" r="1" fill="#4a9eff" />
-          </svg>
+          <svg class="passion-icon" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12c0 3.22 1.523 6.086 3.9 7.95" /><path d="M19.5 10.5C18 7.5 15 6 12 6s-6 1.5-7.5 4.5" /><path d="M4.5 10.5h15" /><path d="M6 14.5c2 1 4 1.5 6 1.5s4-.5 6-1.5" /><circle cx="12" cy="12" r="1" fill="#4a9eff" /></svg>
           <div class="passion-label" style="color:#4a9eff;">RIDING</div>
         </div>
-
-        <!-- GAMING : MANETTE CONSOLE -->
         <div class="passion-item">
-          <svg class="passion-icon" viewBox="0 0 24 24" fill="none" stroke="#ff5aad" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="6" y1="12" x2="10" y2="12" />
-            <line x1="8" y1="10" x2="8" y2="14" />
-            <line x1="15" y1="13" x2="15.01" y2="13" stroke-width="2" />
-            <line x1="18" y1="11" x2="18.01" y2="11" stroke-width="2" />
-            <path d="M17.32 5H6.68A4.68 4.68 0 0 0 2 9.68v4.64A4.68 4.68 0 0 0 6.68 19h.64a4.68 4.68 0 0 0 3.73-1.84L12 16l.95 1.16A4.68 4.68 0 0 0 16.68 19h.64A4.68 4.68 0 0 0 22 14.32V9.68A4.68 4.68 0 0 0 17.32 5z" />
-          </svg>
+          <svg class="passion-icon" viewBox="0 0 24 24" fill="none" stroke="#ff5aad" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="12" x2="10" y2="12" /><line x1="8" y1="10" x2="8" y2="14" /><line x1="15" y1="13" x2="15.01" y2="13" stroke-width="2" /><line x1="18" y1="11" x2="18.01" y2="11" stroke-width="2" /><path d="M17.32 5H6.68A4.68 4.68 0 0 0 2 9.68v4.64A4.68 4.68 0 0 0 6.68 19h.64a4.68 4.68 0 0 0 3.73-1.84L12 16l.95 1.16A4.68 4.68 0 0 0 16.68 19h.64A4.68 4.68 0 0 0 22 14.32V9.68A4.68 4.68 0 0 0 17.32 5z" /></svg>
           <div class="passion-label" style="color:#ff5aad;">GAMING</div>
         </div>
-
-        <!-- SPORT : CHRONOMETRE -->
         <div class="passion-item">
-          <svg class="passion-icon" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="13" r="8" />
-            <polyline points="12 9 12 13 14 15" />
-            <line x1="12" y1="5" x2="12" y2="2" />
-            <line x1="10" y1="2" x2="14" y2="2" />
-            <line x1="19" y1="6" x2="21" y2="4" />
-          </svg>
+          <svg class="passion-icon" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8" /><polyline points="12 9 12 13 14 15" /><line x1="12" y1="5" x2="12" y2="2" /><line x1="10" y1="2" x2="14" y2="2" /><line x1="19" y1="6" x2="21" y2="4" /></svg>
           <div class="passion-label" style="color:#ff6b35;">SPORT</div>
         </div>
       </div>
-
       <div class="sub">Why do we willingly spend our energy, time, and money on things that don't pay our bills? The answer is simple: <em>Passion.</em></div>
     </div>
 
@@ -246,21 +177,7 @@ html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
     <div class="slide" id="s8">
       <div class="big">Shared <span class="accent-p">Adrenaline</span></div>
       <svg viewBox="0 0 500 140" style="width:min(600px,85vw);margin:12px 0;">
-        <line x1="60" y1="70" x2="170" y2="40" stroke="rgba(74,158,255,.3)" stroke-width="1.5"/>
-        <line x1="60" y1="70" x2="155" y2="105" stroke="rgba(74,158,255,.3)" stroke-width="1.5"/>
-        <line x1="170" y1="40" x2="280" y2="70" stroke="rgba(255,90,173,.3)" stroke-width="1.5"/>
-        <line x1="155" y1="105" x2="280" y2="70" stroke="rgba(255,107,53,.3)" stroke-width="1.5"/>
-        <line x1="280" y1="70" x2="375" y2="35" stroke="rgba(74,158,255,.3)" stroke-width="1.5"/>
-        <line x1="280" y1="70" x2="390" y2="110" stroke="rgba(255,90,173,.3)" stroke-width="1.5"/>
-        <line x1="375" y1="35" x2="450" y2="70" stroke="rgba(255,107,53,.3)" stroke-width="1.5"/>
-        <line x1="390" y1="110" x2="450" y2="70" stroke="rgba(74,158,255,.3)" stroke-width="1.5"/>
-        <circle cx="60" cy="70" r="8" fill="#4a9eff" opacity=".85"/>
-        <circle cx="170" cy="40" r="7" fill="#ff5aad" opacity=".85"/>
-        <circle cx="155" cy="105" r="7" fill="#ff6b35" opacity=".85"/>
-        <circle cx="280" cy="70" r="11" fill="rgba(255,255,255,.85)"/>
-        <circle cx="375" cy="35" r="7" fill="#4a9eff" opacity=".85"/>
-        <circle cx="390" cy="110" r="8" fill="#ff5aad" opacity=".85"/>
-        <circle cx="450" cy="70" r="9" fill="#ff6b35" opacity=".85"/>
+        <line x1="60" y1="70" x2="170" y2="40" stroke="rgba(74,158,255,.3)" stroke-width="1.5"/><line x1="60" y1="70" x2="155" y2="105" stroke="rgba(74,158,255,.3)" stroke-width="1.5"/><line x1="170" y1="40" x2="280" y2="70" stroke="rgba(255,90,173,.3)" stroke-width="1.5"/><line x1="155" y1="105" x2="280" y2="70" stroke="rgba(255,107,53,.3)" stroke-width="1.5"/><line x1="280" y1="70" x2="375" y2="35" stroke="rgba(74,158,255,.3)" stroke-width="1.5"/><line x1="280" y1="70" x2="390" y2="110" stroke="rgba(255,90,173,.3)" stroke-width="1.5"/><line x1="375" y1="35" x2="450" y2="70" stroke="rgba(255,107,53,.3)" stroke-width="1.5"/><line x1="390" y1="110" x2="450" y2="70" stroke="rgba(74,158,255,.3)" stroke-width="1.5"/><circle cx="60" cy="70" r="8" fill="#4a9eff" opacity=".85"/><circle cx="170" cy="40" r="7" fill="#ff5aad" opacity=".85"/><circle cx="155" cy="105" r="7" fill="#ff6b35" opacity=".85"/><circle cx="280" cy="70" r="11" fill="rgba(255,255,255,.85)"/><circle cx="375" cy="35" r="7" fill="#4a9eff" opacity=".85"/><circle cx="390" cy="110" r="8" fill="#ff5aad" opacity=".85"/><circle cx="450" cy="70" r="9" fill="#ff6b35" opacity=".85"/>
       </svg>
       <div class="sub">A nod between two riders on a highway. Instant teamwork with strangers online. A bond with teammates. Passion breaks isolation.</div>
     </div>
@@ -277,14 +194,14 @@ html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
       <div class="sub">Never apologize for what you are passionate about.<br>Never let your spark go out. Thank you.</div>
     </div>
 
-    <!-- SLIDE 11 : Q&A INTRO -->
+    <!-- SLIDE 11 -->
     <div class="slide" id="s10">
       <div class="big" style="font-size:clamp(90px,18vw,180px);color:#ff5aad;line-height:0.7;font-family:monospace;text-shadow: 0 0 40px rgba(255,90,173,0.35);">?</div>
       <div class="big" style="font-size:clamp(45px,6.5vw,72px);margin-top:15px;">Questions & Answers</div>
       <div class="sub" style="letter-spacing: 0.05em; font-size:clamp(22px,2.6vw,36px);">Let's start the conversation. What are your thoughts?</div>
     </div>
 
-    <!-- SLIDE 12 : QUESTION 1 INDIVIDUELLE -->
+    <!-- SLIDE 12 -->
     <div class="slide" id="s11">
       <div class="bg-q-mark" style="color:#4a9eff;">?</div>
       <div class="single-qa-box" style="border-color: rgba(74,158,255,0.3);">
@@ -293,7 +210,7 @@ html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
       </div>
     </div>
 
-    <!-- SLIDE 13 : QUESTION 2 INDIVIDUELLE -->
+    <!-- SLIDE 13 -->
     <div class="slide" id="s12">
       <div class="bg-q-mark" style="color:#ff5aad;">?</div>
       <div class="single-qa-box" style="border-color: rgba(255,90,173,0.3);">
@@ -302,7 +219,7 @@ html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
       </div>
     </div>
 
-    <!-- SLIDE 14 : QUESTION 3 INDIVIDUELLE -->
+    <!-- SLIDE 14 -->
     <div class="slide" id="s13">
       <div class="bg-q-mark" style="color:#ff6b35;">?</div>
       <div class="single-qa-box" style="border-color: rgba(255,107,53,0.3);">
@@ -331,7 +248,26 @@ html,body{width:100%;height:100%;background:#111113;overflow:hidden;}
 </style>
 
 <script>
-var cur=0,total=14,sim=false;
+var cur=0,total=14,sim=false, presenterWindow=null;
+
+// SCRIPTS DE SCRIPT ORAL (SPEAKERS NOTES) EN ANGLAIS POUR L'ECRAN PRESENTATEUR
+var speakerNotes = [
+  "HOOK (0:00-0:45): Describe the physical feeling of adrenaline. Focus eyes, rapid heartbeat, absolute quiet. Connect it to the flow state.",
+  "REVEAL (0:45-1:30): Introduce the three examples: a perfect motorcycle corner, clutch gaming seconds, sprinting to the goal. Introduce the core concept: Passion.",
+  "THESIS (1:30-2:00): State clearly that passion isn't just a basic hobby. It's an absolute biological and psychological necessity to survive today.",
+  "THE FLOW STATE (2:00-3:15): Explain Mihaly Csikszentmihalyi's concept. Mention the temporary deactivation of the Default Mode Network (overthinking and stress).",
+  "BIOLOGICAL RESET (3:15-4:30): Talk about dopamine and endorphins. Explain that the brain acts the exact same way during gaming, sports, or motorcycling.",
+  "THE PARADOX (4:30-5:45): Use the Latin etymology: Passio means suffering. Introduce the split concept: Harmonious energy vs Obsessive addiction.",
+  "PILOT THE FIRE (5:45-7:00): Explain the definition of maturity: learning how to handle the fire of passion safely without letting it burn your life down.",
+  "RESILIENCE SIMULATION (7:00-8:00): Launch the simulation. Explain that passion is the only place where failing 50 times drives us to continue instead of quitting.",
+  "SHARED ADRENALINE (8:00-9:00): Talk about human connections. The motorcycle nod, teammates on a field, strangers on Discord. Passion removes isolation.",
+  "CONCLUSION (9:00-10:00): Final call to action. Passion is your psychological shield. Find your fuel, protect your flow, and say thank you.",
+  "Q&A TRANSITION: Formally close the talk, shift the posture, and invite your classmates or teacher to ask their first questions.",
+  "DISCUSSION TOPIC 1: Balance. Ask if life without a passion can be genuinely happy. Be ready to answer with your own opinion if the audience is silent.",
+  "DISCUSSION TOPIC 2: Limits. Ask where the line is between hobbies and bad addictions. Talk about self-discipline and managing time.",
+  "DISCUSSION TOPIC 3: Society. Discuss if school systems crush true personal passions or help discover them. Great way to end a high-quality debate."
+];
+
 var dotnav=document.getElementById('dotnav');
 for(var i=0;i<total;i++){
   var d=document.createElement('div');
@@ -339,19 +275,197 @@ for(var i=0;i<total;i++){
   (function(x){d.onclick=function(){goTo(x)}})(i);
   dotnav.appendChild(d);
 }
-function goTo(n){
+
+function goTo(n, fromPresenter = false){
   document.getElementById('s'+cur).classList.remove('on');
   cur=Math.max(0,Math.min(n,total-1));
   var s=document.getElementById('s'+cur);
   s.classList.remove('on');void s.offsetWidth;s.classList.add('on');
   document.getElementById('barnum').textContent=(cur+1)+' / '+total;
   dotnav.querySelectorAll('.dot-nav').forEach(function(d,i){d.classList.toggle('on',i===cur)});
+  
+  // Cache le bouton presenter si on avance
+  if(cur > 0 && document.getElementById('presInitBtn')) {
+    document.getElementById('presInitBtn').style.display = 'none';
+  } else if (cur === 0 && document.getElementById('presInitBtn')) {
+    document.getElementById('presInitBtn').style.display = 'inline-block';
+  }
+
+  // Alerte la fenêtre présentateur s'il y en a une
+  if(!fromPresenter && presenterWindow && !presenterWindow.closed) {
+    presenterWindow.postMessage({type: 'SYNC_SLIDE', index: cur}, '*');
+  }
 }
+
 function go(d){goTo(cur+d);}
+
 document.addEventListener('keydown',function(e){
   if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(1);}
   if(e.key==='ArrowLeft'){e.preventDefault();go(-1);}
 });
+
+// Écoute les ordres de la fenêtre présentateur
+window.addEventListener('message', function(e) {
+  if(e.data.type === 'CHANGE_SLIDE') {
+    goTo(e.data.index, true);
+  }
+  if(e.data.type === 'TRIGGER_SIM') {
+    runSim();
+  }
+});
+
+// ALIMENTATION DU MODE PRESENTATEUR SYNC
+function openPresenterMode() {
+  var width = 1100; var height = 650;
+  var left = (screen.width - width) / 2; var top = (screen.height - height) / 2;
+  
+  presenterWindow = window.open('', 'PresenterMode', `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`);
+  
+  var presHTML = `
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <title>Presenter Control Deck</title>
+    <style>
+      body { background: #18181b; color: #fff; font-family: monospace; margin: 0; padding: 20px; display: flex; flex-direction: column; height: 100vh; box-sizing: border-box; }
+      .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #27272a; padding-bottom: 15px; }
+      .timer-box { font-size: 42px; color: #4a9eff; font-weight: bold; display: flex; align-items: center; gap: 15px; }
+      .timer-btn { background: #27272a; border: none; color: #fff; padding: 5px 15px; font-size: 14px; border-radius: 4px; cursor: pointer; font-family: monospace;}
+      .timer-btn:hover { background: #3f3f46; }
+      .main-layout { display: flex; flex: 1; gap: 20px; margin-top: 20px; overflow: hidden; }
+      .left-col { flex: 1; display: flex; flex-direction: column; gap: 15px; }
+      .right-col { flex: 1; background: #202024; border: 1px solid #27272a; border-radius: 8px; padding: 25px; display: flex; flex-direction: column; }
+      .slide-preview { background: #111113; border: 1px solid #3f3f46; border-radius: 6px; padding: 20px; text-align: center; flex: 1; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #a1a1aa; }
+      .notes-title { font-size: 14px; color: #ff5aad; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 15px; font-weight: bold; border-bottom: 1px solid #27272a; padding-bottom: 5px;}
+      .notes-content { font-family: 'Georgia', serif; font-size: 22px; line-height: 1.6; color: #e4e4e7; overflow-y: auto; flex: 1; }
+      .controls { display: flex; gap: 15px; }
+      .ctrl-btn { flex: 1; padding: 15px; font-size: 18px; font-weight: bold; background: #4a9eff; border: none; color: #fff; border-radius: 6px; cursor: pointer; font-family: monospace; }
+      .ctrl-btn.prev { background: #3f3f46; }
+      .ctrl-btn:hover { opacity: 0.9; }
+      .sim-btn { background: #ff6b35; color: white; border: none; padding: 10px; font-family: monospace; font-size: 14px; border-radius: 4px; cursor: pointer; margin-top: 10px;}
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div><span style="color:#a1a1aa;">TALK:</span> <strong style="font-size:16px;">The Fuel of Life</strong></div>
+      <div class="timer-box">
+        <span id="clock">00:00</span>
+        <button class="timer-btn" id="toggleTimer" onclick="window.opener.toggleTimer()">PAUSE</button>
+        <button class="timer-btn" onclick="window.opener.resetTimer()">RESET</button>
+      </div>
+      <div><span style="color:#a1a1aa;">SLIDE:</span> <strong id="slideNum" style="font-size:18px; color:#4a9eff;">1 / 14</strong></div>
+    </div>
+    
+    <div class="main-layout">
+      <div class="left-col">
+        <div class="slide-preview" id="previewBox">Slide Content Active</div>
+        <div class="controls">
+          <button class="ctrl-btn prev" onclick="window.opener.go(-1)">← PREV</button>
+          <button class="ctrl-btn" onclick="window.opener.go(1)">NEXT →</button>
+        </div>
+        <button class="sim-btn" id="simLauncher" style="display:none;" onclick="window.opener.postMessage({type:'TRIGGER_SIM'}, '*')">▶ Trigger Failure Simulation</button>
+      </div>
+      <div class="right-col">
+        <div class="notes-title">🗣️ Speaker Notes (English Script)</div>
+        <div class="notes-content" id="notesBox">Loading notes...</div>
+      </div>
+    </div>
+
+    <script>
+      // Réception des infos de la slide principale
+      window.addEventListener('message', function(e) {
+        if(e.data.type === 'SYNC_PRESENTER') {
+          document.getElementById('slideNum').textContent = (e.data.index + 1) + ' / ' + e.data.total;
+          document.getElementById('notesBox').textContent = e.data.notes;
+          document.getElementById('previewBox').innerHTML = e.data.html;
+          
+          // Affiche le déclencheur de simulation sur la slide 8 (index 7)
+          if(e.data.index === 7) {
+            document.getElementById('simLauncher').style.display = 'block';
+          } else {
+            document.getElementById('simLauncher').style.display = 'none';
+          }
+        }
+        if(e.data.type === 'TICK') {
+          document.getElementById('clock').textContent = e.data.time;
+        }
+      });
+    <\/script>
+  </body>
+  </html>
+  `;
+  
+  presenterWindow.document.open();
+  presenterWindow.document.write(presHTML);
+  presenterWindow.document.close();
+  
+  setTimeout(startTimer, 500);
+  setTimeout(updatePresenterDeck, 600);
+}
+
+// TRANSMISSION DES METADONNEES VERS L'ECRAN CONTROLE
+function updatePresenterDeck() {
+  if(presenterWindow && !presenterWindow.closed) {
+    var activeSlide = document.getElementById('s'+cur);
+    presenterWindow.postMessage({
+      type: 'SYNC_PRESENTER',
+      index: cur,
+      total: total,
+      notes: speakerNotes[cur],
+      html: activeSlide.innerHTML
+    }, '*');
+  }
+}
+
+// Override fonction GoTo pour pousser la mise à jour présentateur
+var baseGoTo = goTo;
+goTo = function(n, fromPresenter) {
+  baseGoTo(n, fromPresenter);
+  updatePresenterDeck();
+};
+
+// TIMER ENGINE (CHRONOMETRE)
+var timerInterval = null, secondsElapsed = 0, timerRunning = false;
+function startTimer() {
+  if(timerRunning) return;
+  timerRunning = true;
+  timerInterval = setInterval(function() {
+    secondsElapsed++;
+    var m = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+    var s = String(secondsElapsed % 60).padStart(2, '0');
+    var timeStr = m + ':' + s;
+    if(presenterWindow && !presenterWindow.closed) {
+      presenterWindow.postMessage({type: 'TICK', time: timeStr}, '*');
+    }
+  }, 1000);
+}
+function toggleTimer() {
+  var btn = presenterWindow.document.getElementById('toggleTimer');
+  if(timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    btn.textContent = 'START';
+    btn.style.background = '#4a9eff';
+  } else {
+    timerRunning = false;
+    startTimer();
+    btn.textContent = 'PAUSE';
+    btn.style.background = '#27272a';
+  }
+}
+function resetTimer() {
+  clearInterval(timerInterval);
+  timerRunning = false;
+  secondsElapsed = 0;
+  if(presenterWindow && !presenterWindow.closed) {
+    presenterWindow.postMessage({type: 'TICK', time: '00:00'}, '*');
+    var btn = presenterWindow.document.getElementById('toggleTimer');
+    btn.textContent = 'PAUSE';
+    btn.style.background = '#27272a';
+  }
+  startTimer();
+}
+
 // touch swipe
 var tx=0;
 document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;});
@@ -361,6 +475,7 @@ document.addEventListener('touchend',function(e){
 });
 // hide hint
 setTimeout(function(){var h=document.getElementById('hint');h.style.opacity='0';},4000);
+
 function runSim(){
   if(sim)return;sim=true;
   var cnt=document.getElementById('cnt'),btn=document.getElementById('runbtn');
